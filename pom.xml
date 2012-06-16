@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>jp.gr.java_conf.afterthesunrise</groupId>
@@ -7,8 +8,42 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>thadoop</name>
-	<url>http://afterthesunrise.wordpress.com/</url>
+	<name>Thadoop</name>
+	<description>Thrift integration for Hadoop Writables.</description>
+	<url>https://github.com/after-the-sunrise/Thadoop</url>
+
+	<developers>
+		<developer>
+			<id>after-the-sunrise</id>
+			<name>Takanori Takase</name>
+			<timezone>+9</timezone>
+			<organization>individual</organization>
+			<organizationUrl>http://afterthesunrise.wordpress.com/</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/after-the-sunrise/Thadoop.git</connection>
+		<developerConnection>scm:git:git@github.com:after-the-sunrise/Thadoop.git</developerConnection>
+		<url>scm:git:git://github.com/after-the-sunrise/Thadoop.git</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/after-the-sunrise/Thadoop/issues</url>
+	</issueManagement>
+
+	<prerequisites>
+		<maven>3.0.4</maven>
+	</prerequisites>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +62,8 @@
 
 		<dependency.hadoop.version>1.0.2</dependency.hadoop.version>
 		<dependency.junit.version>4.10</dependency.junit.version>
+		<dependency.mockito.version>1.9.0</dependency.mockito.version>
+		<dependency.pig.version>0.10.0</dependency.pig.version>
 		<dependency.slf4j-jdk14.version>1.5.8</dependency.slf4j-jdk14.version>
 		<dependency.thrift.version>0.8.0</dependency.thrift.version>
 
@@ -187,6 +224,18 @@
 			<groupId>org.apache.thrift</groupId>
 			<artifactId>libthrift</artifactId>
 			<version>${dependency.thrift.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${dependency.mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pig</groupId>
+			<artifactId>pig</artifactId>
+			<version>${dependency.pig.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
