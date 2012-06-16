@@ -10,7 +10,7 @@
 
 	<name>Thadoop</name>
 	<description>Thrift integration for Hadoop Writables.</description>
-	<url>https://github.com/after-the-sunrise/Thadoop</url>
+	<url>https://github.com/after-the-sunrise/thadoop</url>
 
 	<developers>
 		<developer>
@@ -31,14 +31,14 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/after-the-sunrise/Thadoop.git</connection>
-		<developerConnection>scm:git:git@github.com:after-the-sunrise/Thadoop.git</developerConnection>
-		<url>scm:git:git://github.com/after-the-sunrise/Thadoop.git</url>
+		<connection>scm:git:git://github.com/after-the-sunrise/thadoop.git</connection>
+		<developerConnection>scm:git:git@github.com:after-the-sunrise/thadoop.git</developerConnection>
+		<url>scm:git:git://github.com/after-the-sunrise/thadoop.git</url>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/after-the-sunrise/Thadoop/issues</url>
+		<url>https://github.com/after-the-sunrise/thadoop/issues</url>
 	</issueManagement>
 
 	<prerequisites>
