@@ -26,20 +26,38 @@
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>manual</distribution>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
 	<scm>
+		<url>https://github.com/after-the-sunrise/thadoop</url>
 		<connection>scm:git:git://github.com/after-the-sunrise/thadoop.git</connection>
 		<developerConnection>scm:git:git@github.com:after-the-sunrise/thadoop.git</developerConnection>
-		<url>scm:git:git://github.com/after-the-sunrise/thadoop.git</url>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
 		<url>https://github.com/after-the-sunrise/thadoop/issues</url>
 	</issueManagement>
+
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://ats.ci.cloudbees.com/job/thadoop/</url>
+	</ciManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>ats-release</id>
+			<name>CloudBees ats-release</name>
+			<url>https://repository-ats.forge.cloudbees.com/release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ats-snapshot</id>
+			<name>CloudBees ats-snapshot</name>
+			<url>https://repository-ats.forge.cloudbees.com/snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<prerequisites>
 		<maven>3.0.4</maven>
@@ -66,7 +84,6 @@
 		<dependency.pig.version>0.10.0</dependency.pig.version>
 		<dependency.slf4j-jdk14.version>1.5.8</dependency.slf4j-jdk14.version>
 		<dependency.thrift.version>0.8.0</dependency.thrift.version>
-
 	</properties>
 
 	<build>
