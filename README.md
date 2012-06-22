@@ -37,7 +37,9 @@ In your maven project, add thadoop module maven repository and dependency.
 	</dependencies>
 
 ## Implementation
-Create a subclass of `AbstractTWritable.java`. This superclass contains the actual implementation of the Hadoop's writable interface, so you can feed your subclass to Mapper/Reducer directly.  Subclassed implementation should something like below:
+
+### Writable
+Create a subclass of `AbstractTWritable.java`. This superclass contains the actual implementation of the Hadoop's writable interface, so you can feed your subclass to Mapper/Reducer directly.  Subclass implementation should something like below:
 
 [SampleWritable.java]
 
@@ -48,6 +50,25 @@ Create a subclass of `AbstractTWritable.java`. This superclass contains the actu
 		@Override
 		public ThadoopSample get() {
 			return base;
+		}
+		
+	}
+
+### Pig Storage
+Create a subclass of `AbstractTStorage.java`. This superclass contains the Pig's loading function implementation. 
+* Reads thrift records stored in Hadoop's Sequence file format.
+* Key is ignored, and only the value will be parsed.
+* You will need to import thadoop jar and your subclass jar.
+
+Subclass implementation should something like below:
+
+[SampleStorage.java]
+
+	public class SampleStorage extends AbstractTStorage<ThadoopSample._Fields, SampleWritable> {
+		
+		@Override
+		protected SortedMap<ThadoopSample._Fields, Byte> getFieldIds() {
+			return transformFields(ThadoopSample.metaDataMap);
 		}
 		
 	}
