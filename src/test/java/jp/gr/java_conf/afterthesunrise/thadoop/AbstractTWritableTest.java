@@ -71,43 +71,48 @@ public class AbstractTWritableTest {
 		target.get().setFieldSet(Collections.singleton(ThadoopType.HOGE));
 		target.get().setFieldMap(Collections.singletonMap("T", allocate(0)));
 
-		// Serialize
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ObjectOutput output = new ObjectOutputStream(out);
-		target.write(output);
-		output.close();
+		// Check multiple invocation
+		for (int i = 0; i < 3; i++) {
 
-		// Deserialize
-		SampleWritable result = new SampleWritable();
-		InputStream in = new ByteArrayInputStream(out.toByteArray());
-		ObjectInput input = new ObjectInputStream(in);
-		result.readFields(input);
-		input.close();
+			// Serialize
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutput output = new ObjectOutputStream(out);
+			target.write(output);
+			output.close();
 
-		// Verify In/Out (Collection)
-		assertThat(result.get().getFieldSet().size(), is(1));
-		assertThat(result.get().getFieldMap().size(), is(1));
+			// Deserialize
+			SampleWritable result = new SampleWritable();
+			InputStream in = new ByteArrayInputStream(out.toByteArray());
+			ObjectInput input = new ObjectInputStream(in);
+			result.readFields(input);
+			input.close();
 
-		// List
-		List<ThadoopSample> list = result.get().getFieldList();
-		assertThat(list.size(), is(1));
-		assertEquals(sample.isFieldBoolean(), list.get(0).isFieldBoolean());
-		assertEquals(sample.getFieldByte(), list.get(0).getFieldByte());
-		assertEquals(sample.getFieldShort(), list.get(0).getFieldShort());
-		assertEquals(sample.getFieldInt(), list.get(0).getFieldInt());
-		assertEquals(sample.getFieldLong(), list.get(0).getFieldLong());
-		assertEquals(sample.getFieldDouble(), list.get(0).getFieldDouble());
-		assertEquals(sample.getFieldString(), list.get(0).getFieldString());
+			// Verify In/Out (Collection)
+			assertThat(result.get().getFieldSet().size(), is(1));
+			assertThat(result.get().getFieldMap().size(), is(1));
 
-		// Set
-		Set<ThadoopType> set = result.get().getFieldSet();
-		assertThat(set.size(), is(1));
-		assertTrue(set.contains(ThadoopType.HOGE));
+			// List
+			List<ThadoopSample> list = result.get().getFieldList();
+			assertThat(list.size(), is(1));
+			assertEquals(sample.isFieldBoolean(), list.get(0).isFieldBoolean());
+			assertEquals(sample.getFieldByte(), list.get(0).getFieldByte());
+			assertEquals(sample.getFieldShort(), list.get(0).getFieldShort());
+			assertEquals(sample.getFieldInt(), list.get(0).getFieldInt());
+			assertEquals(sample.getFieldLong(), list.get(0).getFieldLong());
+			assertEquals(sample.getFieldDouble(), list.get(0).getFieldDouble());
+			assertEquals(sample.getFieldString(), list.get(0).getFieldString());
 
-		// Map
-		Map<String, ByteBuffer> map = result.get().getFieldMap();
-		assertThat(map.size(), is(1));
-		assertEquals(allocate(0), map.get("T"));
+			// Set
+			Set<ThadoopType> set = result.get().getFieldSet();
+			assertThat(set.size(), is(1));
+			assertTrue(set.contains(ThadoopType.HOGE));
+
+			// Map
+			Map<String, ByteBuffer> map = result.get().getFieldMap();
+			assertThat(map.size(), is(1));
+			assertEquals(allocate(0), map.get("T"));
+
+		}
 
 	}
 
