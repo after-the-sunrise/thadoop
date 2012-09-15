@@ -44,7 +44,7 @@ public class AbstractTStorageTest {
 		private final ThadoopSample value = new ThadoopSample();
 
 		@Override
-		protected ThadoopSample get() {
+		public ThadoopSample get() {
 			return value;
 		}
 

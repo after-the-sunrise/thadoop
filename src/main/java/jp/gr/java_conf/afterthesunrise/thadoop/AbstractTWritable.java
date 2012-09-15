@@ -9,7 +9,6 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TMemoryInputTransport;
@@ -35,7 +34,7 @@ import org.apache.thrift.transport.TMemoryInputTransport;
  * 	private final SomeThriftType instance = new SomeThriftType();
  * 
  * 	{@code @Override}
- * 	protected SomeThriftType get() {
+ * 	public SomeThriftType get() {
  * 		return instance;
  * 	}
  * 
@@ -48,7 +47,7 @@ import org.apache.thrift.transport.TMemoryInputTransport;
  * serialized using {@link WritableUtils#writeVInt(DataOutput, int)}. Therefore,
  * the serialized data length must not exceed the integer's maximum value
  * (2,147,483,647 bytes). Second part contain the data in primitive byte array
- * format, using the {@link TBinaryProtocol}.
+ * format, using the {@link TCompactProtocol}.
  * </p>
  * 
  * @author takanori.takase
@@ -65,7 +64,7 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 	 * 
 	 * @return T instance
 	 */
-	public abstract T get();
+	protected abstract T get();
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
