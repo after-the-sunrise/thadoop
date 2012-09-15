@@ -1,6 +1,5 @@
 package jp.gr.java_conf.afterthesunrise.thadoop;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -11,7 +10,9 @@ import org.apache.hadoop.io.WritableUtils;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
+import org.apache.thrift.transport.TMemoryInputTransport;
 
 /**
  * <p>
@@ -64,7 +65,7 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 	 * 
 	 * @return T instance
 	 */
-	protected abstract T get();
+	public abstract T get();
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
@@ -75,11 +76,9 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 
 		in.readFully(bytes);
 
-		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+		TMemoryInputTransport transport = new TMemoryInputTransport(bytes);
 
-		TIOStreamTransport transport = new TIOStreamTransport(stream);
-
-		TBinaryProtocol protocol = new TBinaryProtocol(transport);
+		TCompactProtocol protocol = new TCompactProtocol(transport);
 
 		T base = get();
 
@@ -100,7 +99,7 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 
 		TIOStreamTransport transport = new TIOStreamTransport(stream);
 
-		TBinaryProtocol protocol = new TBinaryProtocol(transport);
+		TCompactProtocol protocol = new TCompactProtocol(transport);
 
 		try {
 			get().write(protocol);
