@@ -42,7 +42,7 @@ import org.apache.thrift.protocol.TType;
  *            Subclass of AbstractTWritable to handle in this storage.
  */
 public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends AbstractTWritable<? extends TBase<?, F>>>
-		extends FileInputLoadFunc implements LoadMetadata, Comparator<F> {
+		extends FileInputLoadFunc implements LoadMetadata {
 
 	/**
 	 * A mapping array indexed by thrift type id, and containing pig type id.<br />
@@ -168,7 +168,9 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 	 */
 	protected final SortedMap<F, Byte> transformFields(Map<F, FieldMetaData> map) {
 
-		SortedMap<F, Byte> result = new TreeMap<F, Byte>(this);
+		Comparator<F> comparator = TFieldIdEnumComparator.get();
+
+		SortedMap<F, Byte> result = new TreeMap<F, Byte>(comparator);
 
 		for (Entry<F, FieldMetaData> entry : map.entrySet()) {
 
@@ -182,16 +184,6 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 
 		return result;
 
-	}
-
-	/**
-	 * Compare natural order using {@code TFieldIdEnum#getThriftFieldId()}.
-	 * 
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public final int compare(F o1, F o2) {
-		return Short.compare(o1.getThriftFieldId(), o2.getThriftFieldId());
 	}
 
 	/**
