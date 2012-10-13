@@ -1,8 +1,8 @@
 # Thadoop
-Thadoop is a simple set of template classes to integrate Apache Thrift classes with Hadoop's Writable interface.
+Thadoop is a simple set of wrapper templates to integrate Apache Thrift implementation with Hadoop's Writable interface.
 
 ## Prerequisites
-* JDK 1.6+
+* JDK 1.7+
 * Maven 3.0+
 * Working Thrift generated codes
 * Working Hadoop Environment
@@ -10,8 +10,8 @@ Thadoop is a simple set of template classes to integrate Apache Thrift classes w
 
   (Sample idl `src/thrift/idl/thadoop.thrift` and codes `src/thrift/gen/*` are included for convenience.)
 
-## Maven configuration
-In your maven project, add thadoop module maven repository and dependency.
+## Maven dependency configuration
+In your maven project file, add thadoop module's maven repository and dependency.
 
 [pom.xml]
 
@@ -27,7 +27,7 @@ In your maven project, add thadoop module maven repository and dependency.
 			<url>https://repository-ats.forge.cloudbees.com/snapshot/</url>
 		</repository>
 	</repositories>
-	...
+	
 	<dependencies>
 		<dependency>
 			<groupId>jp.gr.java_conf.afterthesunrise</groupId>
@@ -39,7 +39,7 @@ In your maven project, add thadoop module maven repository and dependency.
 ## Implementation
 
 ### Writable
-Create a subclass of `AbstractTWritable.java`. This superclass contains the actual implementation of the Hadoop's writable interface, so you can feed your subclass to Mapper/Reducer directly.  Subclass implementation should something like below:
+This is the very base of all the other integrations. You will need to prepare your own thrift beforehand. Once you have generated your thrift implementation, create a subclass of `AbstractTWritable.java` similar to the sample below. (Swap 'ThadoopSample' with your thrift class)
 
 [SampleWritable.java]
 
@@ -54,13 +54,34 @@ Create a subclass of `AbstractTWritable.java`. This superclass contains the actu
 		
 	}
 
-### Pig Storage
-Create a subclass of `AbstractTStorage.java`. This superclass contains the Pig's loading function implementation. 
-* Reads thrift records stored in Hadoop's Sequence file format.
-* Key is ignored, and only the value will be parsed.
-* You will need to import thadoop jar and your subclass jar.
+You can feed this subclass to Mapper/Reducer directly, as the superclass implements the Hadoop's writable interface.
 
-Subclass implementation should something like below:
+[SampleJob.java]
+
+	public class SampleJob extends Configured implements Tool {
+
+		@Override
+		public int run(String[] args) throws Exception {
+			
+			Job job = ...
+			
+			job.setOutputValueClass(SampleWritable.class);
+			
+			...
+
+			return ...
+			
+		}
+		
+	}
+
+
+### Pig Storage
+Create a subclass of `AbstractTStorage.java`. This superclass implements the Pig's load function. 
+* Handles thrift records stored in Hadoop's Sequence file format.
+* Key is ignored, and only the value will be parsed.
+
+Subclass implementation should look like something below:
 
 [SampleStorage.java]
 
@@ -73,3 +94,16 @@ Subclass implementation should something like below:
 		
 	}
 
+
+### Hive SerDe
+Create a subclass of `AbstractTSerDe.java`. This superclass implements the Hive's SerDe interface.
+
+[SampleSerDe.java]
+
+	public class SampleSerDe extends AbstractTSerDe<_Fields, SampleWritable> {
+
+		public SampleSerDe() {
+			super(SampleWritable.class, ThadoopSample.metaDataMap);
+		}
+
+	}
