@@ -92,6 +92,7 @@
 		<build.plugin.javancss.version>2.0</build.plugin.javancss.version>
 
 		<dependency.hadoop.version>1.0.2</dependency.hadoop.version>
+		<dependency.hive.version>0.9.0</dependency.hive.version>
 		<dependency.junit.version>4.10</dependency.junit.version>
 		<dependency.mockito.version>1.9.0</dependency.mockito.version>
 		<dependency.pig.version>0.10.0</dependency.pig.version>
@@ -275,6 +276,18 @@
 			<artifactId>hadoop-core</artifactId>
 			<version>${dependency.hadoop.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-serde</artifactId>
+			<version>${dependency.hive.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.thrift</groupId>
+					<artifactId>libthrift</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
