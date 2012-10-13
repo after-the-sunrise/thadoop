@@ -10,6 +10,8 @@ import org.apache.hadoop.io.WritableUtils;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TMemoryInputTransport;
 
@@ -58,6 +60,28 @@ import org.apache.thrift.transport.TMemoryInputTransport;
 public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 		Writable {
 
+	private final TMemoryInputTransport inputTransport;
+
+	private final TProtocol inputProtocol;
+
+	private final ByteArrayOutputStream outputStream;
+
+	private final TIOStreamTransport outputTransport;
+
+	private final TProtocol outputProtocol;
+
+	public AbstractTWritable() {
+		this(new TCompactProtocol.Factory());
+	}
+
+	public AbstractTWritable(TProtocolFactory factory) {
+		inputTransport = new TMemoryInputTransport();
+		inputProtocol = factory.getProtocol(inputTransport);
+		outputStream = new ByteArrayOutputStream();
+		outputTransport = new TIOStreamTransport(outputStream);
+		outputProtocol = factory.getProtocol(outputTransport);
+	}
+
 	/**
 	 * Retrieve T instance. This method will only be invoked once per read or
 	 * write operation.
@@ -75,16 +99,14 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 
 		in.readFully(bytes);
 
-		TMemoryInputTransport transport = new TMemoryInputTransport(bytes);
-
-		TCompactProtocol protocol = new TCompactProtocol(transport);
+		inputTransport.reset(bytes);
 
 		T base = get();
 
 		base.clear();
 
 		try {
-			base.read(protocol);
+			base.read(inputProtocol);
 		} catch (TException e) {
 			throw new IOException(e);
 		}
@@ -94,19 +116,15 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 	@Override
 	public void write(DataOutput out) throws IOException {
 
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-		TIOStreamTransport transport = new TIOStreamTransport(stream);
-
-		TCompactProtocol protocol = new TCompactProtocol(transport);
+		outputStream.reset();
 
 		try {
-			get().write(protocol);
+			get().write(outputProtocol);
 		} catch (TException e) {
 			throw new IOException(e);
 		}
 
-		byte[] bytes = stream.toByteArray();
+		byte[] bytes = outputStream.toByteArray();
 
 		WritableUtils.writeVInt(out, bytes.length);
 
