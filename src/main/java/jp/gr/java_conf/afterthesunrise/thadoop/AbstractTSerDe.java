@@ -44,7 +44,7 @@ import org.apache.thrift.protocol.TType;
  * @param <W>
  *            Subclass of AbstractTWritable to handle.
  */
-public class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractTWritable<? extends TBase<?, F>>>
+public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractTWritable<? extends TBase<?, F>>>
 		implements SerDe {
 
 	/**
@@ -126,7 +126,7 @@ public class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractTWritable<
 	protected ObjectInspector extractInspector(F field, FieldMetaData metaData,
 			Map<Byte, ObjectInspector> inspectors) throws SerDeException {
 
-		byte id = metaData.requirementType;
+		byte id = metaData.valueMetaData.type;
 
 		return inspectors.get(id);
 
