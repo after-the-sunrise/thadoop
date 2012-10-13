@@ -148,7 +148,17 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 	}
 
 	protected Object extractValue(W writable, F field) throws IOException {
-		return writable.get().getFieldValue(field);
+
+		TBase<?, F> base = writable.get();
+
+		Object val = null;
+
+		if (base.isSet(field)) {
+			val = base.getFieldValue(field);
+		}
+
+		return val;
+
 	}
 
 	@Override

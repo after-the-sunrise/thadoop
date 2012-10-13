@@ -166,7 +166,17 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 	}
 
 	protected Object extractValue(W writable, F field) throws SerDeException {
-		return writable.get().getFieldValue(field);
+
+		TBase<?, F> base = writable.get();
+
+		Object val = null;
+
+		if (base.isSet(field)) {
+			val = base.getFieldValue(field);
+		}
+
+		return val;
+
 	}
 
 	@Override
