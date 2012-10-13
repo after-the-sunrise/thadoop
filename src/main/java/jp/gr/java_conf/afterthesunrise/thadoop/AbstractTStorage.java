@@ -111,7 +111,7 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 
 		SortedMap<F, Byte> ids = getFieldIds();
 
-		List<Object> values = new ArrayList<Object>(ids.size());
+		List<Object> values = new ArrayList<>(ids.size());
 
 		for (Entry<F, Byte> entry : ids.entrySet()) {
 
@@ -170,7 +170,7 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 
 		Comparator<F> comparator = TFieldIdEnumComparator.get();
 
-		SortedMap<F, Byte> result = new TreeMap<F, Byte>(comparator);
+		SortedMap<F, Byte> result = new TreeMap<>(comparator);
 
 		for (Entry<F, FieldMetaData> entry : map.entrySet()) {
 
@@ -229,7 +229,7 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 
 		SortedMap<F, Byte> ids = getFieldIds();
 
-		List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>(ids.size());
+		List<FieldSchema> fieldSchemas = new ArrayList<>(ids.size());
 
 		byte[] defensiveCopy = THRIFT_2_PIG.clone();
 
