@@ -68,8 +68,6 @@ You can feed this subclass to Mapper/Reducer directly, as the superclass impleme
 			job.setOutputValueClass(SampleWritable.class);
 			
 			...
-
-			return ...
 			
 		}
 		
@@ -87,9 +85,8 @@ Subclass implementation should look like something below:
 
 	public class SampleStorage extends AbstractTStorage<ThadoopSample._Fields, SampleWritable> {
 		
-		@Override
-		protected SortedMap<ThadoopSample._Fields, Byte> getFieldIds() {
-			return transformFields(ThadoopSample.metaDataMap);
+		public SampleStorage() {
+			super(SampleWritable.class, ThadoopSample.metaDataMap);
 		}
 		
 	}
@@ -100,7 +97,7 @@ Create a subclass of `AbstractTSerDe.java`. This superclass implements the Hive'
 
 [SampleSerDe.java]
 
-	public class SampleSerDe extends AbstractTSerDe<_Fields, SampleWritable> {
+	public class SampleSerDe extends AbstractTSerDe<ThadoopSample._Fields, SampleWritable> {
 
 		public SampleSerDe() {
 			super(SampleWritable.class, ThadoopSample.metaDataMap);

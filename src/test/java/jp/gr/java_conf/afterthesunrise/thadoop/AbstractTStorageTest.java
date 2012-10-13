@@ -17,7 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.SortedMap;
 
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
@@ -56,9 +55,8 @@ public class AbstractTStorageTest {
 	private class SampleStorage extends
 			AbstractTStorage<_Fields, SampleWritable> {
 
-		@Override
-		protected SortedMap<_Fields, Byte> getFieldIds() {
-			return transformFields(ThadoopSample.metaDataMap);
+		protected SampleStorage() {
+			super(SampleWritable.class, ThadoopSample.metaDataMap);
 		}
 
 	}
@@ -71,7 +69,7 @@ public class AbstractTStorageTest {
 	}
 
 	@Test
-	public void testGetInputFormat() {
+	public void testGetInputFormat() throws IOException {
 		assertTrue(target.getInputFormat() instanceof SequenceFileInputFormat);
 	}
 
@@ -114,7 +112,7 @@ public class AbstractTStorageTest {
 	}
 
 	@Test
-	public void testGetSchema() {
+	public void testGetSchema() throws IOException {
 
 		ResourceSchema schema = target.getSchema(null, null);
 
