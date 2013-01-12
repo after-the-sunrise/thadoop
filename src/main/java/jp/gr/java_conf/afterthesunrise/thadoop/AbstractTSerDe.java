@@ -53,7 +53,7 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 	private static final Map<Byte, ObjectInspector> INSPECTORS;
 
 	static {
-		Map<Byte, ObjectInspector> map = new HashMap<>();
+		Map<Byte, ObjectInspector> map = new HashMap<Byte, ObjectInspector>();
 		map.put(TType.BOOL, javaBooleanObjectInspector);
 		map.put(TType.BYTE, javaByteObjectInspector);
 		map.put(TType.I16, javaShortObjectInspector);
@@ -80,11 +80,11 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 		this.fields = generateMap(fields);
 	}
 
-	private SortedMap<F, FieldMetaData> generateMap(Map<F, FieldMetaData> fields) {
+	private <K, V> SortedMap<F, V> generateMap(Map<F, V> fields) {
 
 		Comparator<F> comparator = TFieldIdEnumComparator.get();
 
-		SortedMap<F, FieldMetaData> map = new TreeMap<>(comparator);
+		SortedMap<F, V> map = new TreeMap<F, V>(comparator);
 
 		map.putAll(fields);
 
@@ -95,9 +95,11 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 	@Override
 	public void initialize(Configuration c, Properties p) throws SerDeException {
 
-		List<String> keys = new ArrayList<>(fields.size());
+		int size = fields.size();
 
-		List<ObjectInspector> inspectors = new ArrayList<>(fields.size());
+		List<String> keys = new ArrayList<String>(size);
+
+		List<ObjectInspector> inspectors = new ArrayList<ObjectInspector>(size);
 
 		for (Entry<F, FieldMetaData> entry : fields.entrySet()) {
 
@@ -146,7 +148,7 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 	public Object deserialize(Writable writable) throws SerDeException {
 
 		if (cacheList == null) {
-			cacheList = new ArrayList<>(fields.size());
+			cacheList = new ArrayList<Object>(fields.size());
 		} else {
 			cacheList.clear();
 		}
@@ -191,7 +193,7 @@ public abstract class AbstractTSerDe<F extends TFieldIdEnum, W extends AbstractT
 		if (cacheWritable == null) {
 			try {
 				cacheWritable = clazz.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (Exception e) {
 				throw new SerDeException(e);
 			}
 		} else {

@@ -20,7 +20,7 @@ public final class TFieldIdEnumComparator<T extends TFieldIdEnum> implements
 	private static final long serialVersionUID = 7750731494329633039L;
 
 	@SuppressWarnings("rawtypes")
-	private static final Comparator INSTANCE = new TFieldIdEnumComparator<>();
+	private static final Comparator INSTANCE = new TFieldIdEnumComparator();
 
 	@SuppressWarnings("unchecked")
 	public static <T extends TFieldIdEnum> Comparator<T> get() {
@@ -32,7 +32,7 @@ public final class TFieldIdEnumComparator<T extends TFieldIdEnum> implements
 
 	@Override
 	public int compare(T o1, T o2) {
-		return Short.compare(o1.getThriftFieldId(), o2.getThriftFieldId());
+		return o1.getThriftFieldId() - o2.getThriftFieldId();
 	}
 
 }

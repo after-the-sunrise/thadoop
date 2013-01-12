@@ -1,7 +1,7 @@
 package jp.gr.java_conf.afterthesunrise.thadoop;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
@@ -48,7 +48,7 @@ public class TFieldTypeTest {
 				continue;
 			}
 
-			byte id = (byte) f.get(null);
+			byte id = (Byte) f.get(null);
 
 			assertNotNull(f.getName(), TFieldType.find(id));
 

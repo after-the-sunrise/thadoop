@@ -20,7 +20,7 @@ public class TFieldIdEnumComparatorTest {
 	@Test
 	public void testCompare() {
 
-		List<ThadoopSample._Fields> list = new ArrayList<>();
+		List<ThadoopSample._Fields> list = new ArrayList<_Fields>();
 
 		_Fields[] fields = _Fields.values();
 

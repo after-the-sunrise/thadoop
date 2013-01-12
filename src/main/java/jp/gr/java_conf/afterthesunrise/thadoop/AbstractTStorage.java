@@ -54,7 +54,7 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 	private static final Map<Byte, Byte> TYPES;
 
 	static {
-		Map<Byte, Byte> map = new HashMap<>();
+		Map<Byte, Byte> map = new HashMap<Byte, Byte>();
 		map.put(TType.BOOL, DataType.BOOLEAN);
 		map.put(TType.BYTE, DataType.BYTE);
 		map.put(TType.DOUBLE, DataType.DOUBLE);
@@ -83,14 +83,14 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 	protected AbstractTStorage(Class<W> clazz, Map<F, FieldMetaData> fields) {
 		this.clazz = checkNotNull(clazz);
 		this.fields = generateMap(fields);
-		this.cachedList = new ArrayList<>(this.fields.size());
+		this.cachedList = new ArrayList<Object>(this.fields.size());
 	}
 
-	private SortedMap<F, FieldMetaData> generateMap(Map<F, FieldMetaData> fields) {
+	private <K, V> SortedMap<F, V> generateMap(Map<F, V> fields) {
 
 		Comparator<F> comparator = TFieldIdEnumComparator.get();
 
-		SortedMap<F, FieldMetaData> map = new TreeMap<>(comparator);
+		SortedMap<F, V> map = new TreeMap<F, V>(comparator);
 
 		map.putAll(fields);
 
@@ -148,23 +148,15 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 	}
 
 	protected Object extractValue(W writable, F field) throws IOException {
-
-		TBase<?, F> base = writable.get();
-
-		Object val = null;
-
-		if (base.isSet(field)) {
-			val = base.getFieldValue(field);
-		}
-
-		return val;
-
+		return writable.get().getFieldValue(field);
 	}
 
 	@Override
 	public ResourceSchema getSchema(String path, Job job) throws IOException {
 
-		List<FieldSchema> fieldSchemas = new ArrayList<>(fields.size());
+		int size = fields.size();
+
+		List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>(size);
 
 		for (Entry<F, FieldMetaData> entry : fields.entrySet()) {
 

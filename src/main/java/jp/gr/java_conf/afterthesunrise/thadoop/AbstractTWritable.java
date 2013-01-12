@@ -1,6 +1,5 @@
 package jp.gr.java_conf.afterthesunrise.thadoop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
-import org.apache.thrift.transport.TIOStreamTransport;
+import org.apache.thrift.transport.AutoExpandingBufferWriteTransport;
 import org.apache.thrift.transport.TMemoryInputTransport;
 
 /**
@@ -26,7 +25,7 @@ import org.apache.thrift.transport.TMemoryInputTransport;
  * be used. Given instance will always be initialized before deserialization,
  * using the {@code TBase.clear()} method, so it is safe to reuse a same
  * instance. Use {@link TBase#deepCopy()} or subtype's copy constructor in case
- * if you need to keep each desrialized object individually. A typical subclass
+ * if you need to keep each deserialized object individually. A typical subclass
  * implementation may be similar to the below example:
  * </p>
  * 
@@ -60,25 +59,26 @@ import org.apache.thrift.transport.TMemoryInputTransport;
 public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 		Writable {
 
+	private static final int INIT = 128;
+
+	private static final double GROWTH = 1.2;
+
 	private final TMemoryInputTransport inputTransport;
 
 	private final TProtocol inputProtocol;
 
-	private final ByteArrayOutputStream outputStream;
-
-	private final TIOStreamTransport outputTransport;
+	private final AutoExpandingBufferWriteTransport outputTransport;
 
 	private final TProtocol outputProtocol;
 
 	public AbstractTWritable() {
-		this(new TCompactProtocol.Factory());
+		this(new TCompactProtocol.Factory(), INIT, GROWTH);
 	}
 
-	public AbstractTWritable(TProtocolFactory factory) {
-		inputTransport = new TMemoryInputTransport();
+	public AbstractTWritable(TProtocolFactory factory, int init, double growth) {
+		inputTransport = new TMemoryInputTransport(new byte[init]);
 		inputProtocol = factory.getProtocol(inputTransport);
-		outputStream = new ByteArrayOutputStream();
-		outputTransport = new TIOStreamTransport(outputStream);
+		outputTransport = new AutoExpandingBufferWriteTransport(init, growth);
 		outputProtocol = factory.getProtocol(outputTransport);
 	}
 
@@ -95,11 +95,15 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 
 		int length = WritableUtils.readVInt(in);
 
-		byte[] bytes = new byte[length];
+		byte[] bytes = inputTransport.getBuffer();
 
-		in.readFully(bytes);
+		if (bytes.length < length) {
+			bytes = new byte[length];
+		}
 
-		inputTransport.reset(bytes);
+		in.readFully(bytes, 0, length);
+
+		inputTransport.reset(bytes, 0, length);
 
 		T base = get();
 
@@ -116,7 +120,7 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 	@Override
 	public void write(DataOutput out) throws IOException {
 
-		outputStream.reset();
+		outputTransport.reset();
 
 		try {
 			get().write(outputProtocol);
@@ -124,11 +128,11 @@ public abstract class AbstractTWritable<T extends TBase<?, ?>> implements
 			throw new IOException(e);
 		}
 
-		byte[] bytes = outputStream.toByteArray();
+		int length = outputTransport.getPos();
 
-		WritableUtils.writeVInt(out, bytes.length);
+		WritableUtils.writeVInt(out, length);
 
-		out.write(bytes);
+		out.write(outputTransport.getBuf().array(), 0, length);
 
 	}
 
