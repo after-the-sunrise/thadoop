@@ -1,4 +1,4 @@
-package jp.gr.java_conf.afterthesunrise.thadoop;
+package jp.gr.java_conf.afterthesunrise.thadoop.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -12,7 +12,7 @@ import org.apache.thrift.TFieldIdEnum;
  * 
  * @author takanori.takase
  * @param <F>
- *            Thrift type to compare.
+ *            Thrift fields to compare.
  */
 public final class TFieldIdEnumComparator<T extends TFieldIdEnum> implements
 		Comparator<T>, Serializable {
