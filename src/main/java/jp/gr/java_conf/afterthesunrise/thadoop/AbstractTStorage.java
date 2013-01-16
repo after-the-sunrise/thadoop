@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import jp.gr.java_conf.afterthesunrise.thadoop.comparator.TFieldIdEnumComparator;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.InputFormat;

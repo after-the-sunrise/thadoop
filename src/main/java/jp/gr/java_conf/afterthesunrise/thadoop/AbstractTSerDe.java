@@ -21,6 +21,8 @@ import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import jp.gr.java_conf.afterthesunrise.thadoop.comparator.TFieldIdEnumComparator;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde2.SerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
