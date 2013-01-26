@@ -1,4 +1,4 @@
-package jp.gr.java_conf.afterthesunrise.thadoop;
+package jp.gr.java_conf.afterthesunrise.thadoop.code;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

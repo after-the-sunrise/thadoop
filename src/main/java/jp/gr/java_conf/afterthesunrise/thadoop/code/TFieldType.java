@@ -1,4 +1,4 @@
-package jp.gr.java_conf.afterthesunrise.thadoop;
+package jp.gr.java_conf.afterthesunrise.thadoop.code;
 
 import org.apache.thrift.protocol.TType;
 

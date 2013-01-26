@@ -1,12 +1,12 @@
-package jp.gr.java_conf.afterthesunrise.thadoop;
+package jp.gr.java_conf.afterthesunrise.thadoop.pig;
 
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_BOOLEAN;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_BYTE;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_DOUBLE;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_INT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_LONG;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_SHORT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_STRING;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_BOOLEAN;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_BYTE;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_DOUBLE;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_INT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_LONG;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_SHORT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_STRING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
+import jp.gr.java_conf.afterthesunrise.thadoop.writable.TWritable;
 
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
@@ -33,12 +34,12 @@ import org.junit.Test;
 /**
  * @author takanori.takase
  */
-public class AbstractTStorageTest {
+public class TStorageTest {
 
 	/**
 	 * Sample writable implementation for test.
 	 */
-	private class SampleWritable extends AbstractTWritable<ThadoopSample> {
+	private class SampleWritable extends TWritable<ThadoopSample> {
 
 		private final ThadoopSample value = new ThadoopSample();
 
@@ -52,8 +53,7 @@ public class AbstractTStorageTest {
 	/**
 	 * Sample storage implementation for test.
 	 */
-	private class SampleStorage extends
-			AbstractTStorage<_Fields, SampleWritable> {
+	private class SampleStorage extends TStorage<_Fields, SampleWritable> {
 
 		protected SampleStorage() {
 			super(SampleWritable.class, ThadoopSample.metaDataMap);
@@ -61,7 +61,7 @@ public class AbstractTStorageTest {
 
 	}
 
-	private AbstractTStorage<_Fields, SampleWritable> target;
+	private TStorage<_Fields, SampleWritable> target;
 
 	@Before
 	public void setUp() {
@@ -79,13 +79,13 @@ public class AbstractTStorageTest {
 		// Sample thrift instance
 		SampleWritable writable = new SampleWritable();
 		ThadoopSample sample = writable.get();
-		sample.setFieldBoolean(Boolean.TRUE);
-		sample.setFieldByte(Byte.MAX_VALUE);
-		sample.setFieldShort(Short.MAX_VALUE);
-		sample.setFieldInt(Integer.MAX_VALUE);
-		sample.setFieldLong(Long.MAX_VALUE);
-		sample.setFieldDouble(Double.MAX_VALUE);
-		sample.setFieldString(toString());
+		sample.setVBoolean(Boolean.TRUE);
+		sample.setVByte(Byte.MAX_VALUE);
+		sample.setVShort(Short.MAX_VALUE);
+		sample.setVInt(Integer.MAX_VALUE);
+		sample.setVLong(Long.MAX_VALUE);
+		sample.setVDouble(Double.MAX_VALUE);
+		sample.setVString(toString());
 
 		// Mocked reader
 		@SuppressWarnings("unchecked")
@@ -97,14 +97,14 @@ public class AbstractTStorageTest {
 		// First record (null)
 		Tuple tuple = target.getNext();
 		assertThat(tuple, notNullValue());
-		assertThat(tuple.size(), equalTo(7));
-		assertEquals(sample.isFieldBoolean(), tuple.get(0));
-		assertEquals(sample.getFieldByte(), tuple.get(1));
-		assertEquals(sample.getFieldShort(), tuple.get(2));
-		assertEquals(sample.getFieldInt(), tuple.get(3));
-		assertEquals(sample.getFieldLong(), tuple.get(4));
-		assertEquals(sample.getFieldDouble(), tuple.get(5));
-		assertEquals(sample.getFieldString(), tuple.get(6));
+		assertThat(tuple.size(), equalTo(12));
+		assertEquals(sample.isVBoolean(), tuple.get(0));
+		assertEquals(sample.getVByte(), tuple.get(1));
+		assertEquals(sample.getVShort(), tuple.get(2));
+		assertEquals(sample.getVInt(), tuple.get(3));
+		assertEquals(sample.getVLong(), tuple.get(4));
+		assertEquals(sample.getVDouble(), tuple.get(5));
+		assertEquals(sample.getVString(), tuple.get(6));
 
 		// Second record (null)
 		assertNull(target.getNext());
@@ -118,16 +118,16 @@ public class AbstractTStorageTest {
 
 		ResourceFieldSchema[] fields = schema.getFields();
 
-		assertThat(fields.length, equalTo(7));
+		assertThat(fields.length, equalTo(12));
 
 		// Check field names
-		assertThat(fields[0].getName(), equalTo(FIELD_BOOLEAN.getFieldName()));
-		assertThat(fields[1].getName(), equalTo(FIELD_BYTE.getFieldName()));
-		assertThat(fields[2].getName(), equalTo(FIELD_SHORT.getFieldName()));
-		assertThat(fields[3].getName(), equalTo(FIELD_INT.getFieldName()));
-		assertThat(fields[4].getName(), equalTo(FIELD_LONG.getFieldName()));
-		assertThat(fields[5].getName(), equalTo(FIELD_DOUBLE.getFieldName()));
-		assertThat(fields[6].getName(), equalTo(FIELD_STRING.getFieldName()));
+		assertThat(fields[0].getName(), equalTo(V_BOOLEAN.getFieldName()));
+		assertThat(fields[1].getName(), equalTo(V_BYTE.getFieldName()));
+		assertThat(fields[2].getName(), equalTo(V_SHORT.getFieldName()));
+		assertThat(fields[3].getName(), equalTo(V_INT.getFieldName()));
+		assertThat(fields[4].getName(), equalTo(V_LONG.getFieldName()));
+		assertThat(fields[5].getName(), equalTo(V_DOUBLE.getFieldName()));
+		assertThat(fields[6].getName(), equalTo(V_STRING.getFieldName()));
 
 		// Check field data types
 		assertThat(fields[0].getType(), equalTo(DataType.BOOLEAN));

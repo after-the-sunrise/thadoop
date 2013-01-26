@@ -1,8 +1,8 @@
 package jp.gr.java_conf.afterthesunrise.thadoop.comparator;
 
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_INT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_LONG;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_SHORT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_INT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_LONG;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_SHORT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -25,7 +25,7 @@ public class TComparatorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		target = new TComparator<_Fields>(FIELD_SHORT, FIELD_INT, FIELD_LONG);
+		target = new TComparator<_Fields>(V_SHORT, V_INT, V_LONG);
 	}
 
 	@Test
@@ -52,14 +52,14 @@ public class TComparatorTest {
 		ThadoopSample s3 = new ThadoopSample();
 		ThadoopSample s4 = new ThadoopSample();
 
-		s1.setFieldShort((short) 2);
-		s2.setFieldShort((short) 2);
+		s1.setVShort((short) 2);
+		s2.setVShort((short) 2);
 
-		s2.setFieldInt(4);
-		s3.setFieldInt(4);
+		s2.setVInt(4);
+		s3.setVInt(4);
 
-		s3.setFieldLong(3L);
-		s1.setFieldLong(3L);
+		s3.setVLong(3L);
+		s1.setVLong(3L);
 
 		List<ThadoopSample> list = new ArrayList<ThadoopSample>();
 		list.add(s1);

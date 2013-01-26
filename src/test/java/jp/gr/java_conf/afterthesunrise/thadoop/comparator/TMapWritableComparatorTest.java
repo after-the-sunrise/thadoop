@@ -1,8 +1,8 @@
 package jp.gr.java_conf.afterthesunrise.thadoop.comparator;
 
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_INT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_LONG;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.FIELD_SHORT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_INT;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_LONG;
+import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_SHORT;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class TMapWritableComparatorTest {
 	@Before
 	public void setUp() throws Exception {
 
-		fields = new _Fields[] { FIELD_SHORT, FIELD_INT, FIELD_LONG };
+		fields = new _Fields[] { V_SHORT, V_INT, V_LONG };
 
 		keys = new ShortWritable[fields.length];
 

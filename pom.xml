@@ -82,6 +82,7 @@
 		<build.plugin.sources.version>2.2.1</build.plugin.sources.version>
 		<build.plugin.helper.version>1.7</build.plugin.helper.version>
 		<build.plugin.jar.version>2.4</build.plugin.jar.version>
+		<build.plugin.exec.version>1.2.1</build.plugin.exec.version>
 		<build.plugin.report.version>2.6</build.plugin.report.version>
 		<build.plugin.site.version>3.2</build.plugin.site.version>
 		<build.plugin.surefire.version>2.13</build.plugin.surefire.version>
@@ -90,8 +91,9 @@
 		<build.plugin.checkstyle.version>2.9.1</build.plugin.checkstyle.version>
 		<build.plugin.javadoc.version>2.9</build.plugin.javadoc.version>
 
+		<dependency.guava.version>13.0.1</dependency.guava.version>
 		<dependency.hadoop.version>1.1.1</dependency.hadoop.version>
-		<dependency.hive.version>0.9.0</dependency.hive.version>
+		<dependency.hive.version>0.10.0</dependency.hive.version>
 		<dependency.junit.version>4.11</dependency.junit.version>
 		<dependency.mockito.version>1.9.5</dependency.mockito.version>
 		<dependency.pig.version>0.10.1</dependency.pig.version>
@@ -147,6 +149,21 @@
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${build.plugin.jar.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${build.plugin.exec.version}</version>
+				<configuration>
+					<executable>/opt/local/bin/thrift</executable>
+					<arguments>
+						<argument>--gen</argument>
+						<argument>java:beans,hashcode,private-members</argument>
+						<argument>-out</argument>
+						<argument>${basedir}/src/thrift/gen/java</argument>
+						<argument>${basedir}/src/thrift/idl/thadoop.thrift</argument>
+					</arguments>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -261,6 +278,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${dependency.guava.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 			<version>${dependency.hadoop.version}</version>
@@ -271,12 +293,6 @@
 			<artifactId>hive-serde</artifactId>
 			<version>${dependency.hive.version}</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.thrift</groupId>
-					<artifactId>libthrift</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -309,6 +325,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 
 </project>

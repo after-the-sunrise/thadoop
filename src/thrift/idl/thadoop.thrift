@@ -1,17 +1,5 @@
 
-// Usage : ${THRIFT_EXEC} --gen java:beans,hashcode,private-members -out ${THRIFT_OUT_DIR} thadoop.thrift
-
 namespace java jp.gr.java_conf.afterthesunrise.thadoop.sample
-
-struct ThadoopSample {
- 1: optional bool   fieldBoolean
- 2: optional byte   fieldByte
- 3: optional i16    fieldShort
- 4: optional i32    fieldInt
- 5: optional i64    fieldLong
- 6: optional double fieldDouble
- 7: optional string fieldString
-}
 
 enum ThadoopType {
  FOO
@@ -19,8 +7,23 @@ enum ThadoopType {
  HOGE
 }
 
-struct ThadoopSampleCollection {
- 1: optional list<ThadoopSample> fieldList
- 2: optional set<ThadoopType>    fieldSet
- 3: optional map<string, binary> fieldMap
+struct ThadoopStruct {
+  1: optional i32           vVersion
+  2: optional string        vAuthor
+  3: optional ThadoopType   vType
+}
+
+struct ThadoopSample {
+  1: optional bool          vBoolean
+  2: optional byte          vByte
+  3: optional i16           vShort
+  4: optional i32           vInt
+  5: optional i64           vLong
+  6: optional double        vDouble
+  7: optional string        vString
+  8: optional binary        vBinary
+ 21: optional list<i32>     vList
+ 22: optional set<i32>      vSet
+ 23: optional map<i32, i64> vMap
+ 31: optional ThadoopStruct vStruct
 }

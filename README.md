@@ -39,11 +39,11 @@ In your maven project file, add thadoop module's maven repository and dependency
 ## Implementation
 
 ### Writable
-This is the very base of all the other integrations. You will need to prepare your own thrift beforehand. Once you have generated your thrift implementation, create a subclass of `AbstractTWritable.java` similar to the sample below. (Swap 'ThadoopSample' with your thrift class)
+This is the very base of all the other integrations. You will need to prepare your own thrift beforehand. Once you have generated your thrift implementation, create a subclass of `TWritable.java` similar to the sample below. (Swap 'ThadoopSample' with your thrift class)
 
 [SampleWritable.java]
 
-	public class SampleWritable extends AbstractTWritable<ThadoopSample> {
+	public class SampleWritable extends TWritable<ThadoopSample> {
 		
 		private final ThadoopSample base = new ThadoopSample();
 		
@@ -75,7 +75,7 @@ You can feed this subclass to Mapper/Reducer directly, as the superclass impleme
 
 
 ### Pig Storage
-Create a subclass of `AbstractTStorage.java`. This superclass implements the Pig's load function. 
+Create a subclass of `TStorage.java`. This superclass implements the Pig's load function. 
 * Handles thrift records stored in Hadoop's Sequence file format.
 * Key is ignored, and only the value will be parsed.
 
@@ -83,7 +83,7 @@ Subclass implementation should look like something below:
 
 [SampleStorage.java]
 
-	public class SampleStorage extends AbstractTStorage<ThadoopSample._Fields, SampleWritable> {
+	public class SampleStorage extends TStorage<ThadoopSample._Fields, SampleWritable> {
 		
 		public SampleStorage() {
 			super(SampleWritable.class, ThadoopSample.metaDataMap);
@@ -93,11 +93,11 @@ Subclass implementation should look like something below:
 
 
 ### Hive SerDe
-Create a subclass of `AbstractTSerDe.java`. This superclass implements the Hive's SerDe interface.
+Create a subclass of `TSerDe.java`. This superclass implements the Hive's SerDe interface.
 
 [SampleSerDe.java]
 
-	public class SampleSerDe extends AbstractTSerDe<ThadoopSample._Fields, SampleWritable> {
+	public class SampleSerDe extends TSerDe<ThadoopSample._Fields, SampleWritable> {
 
 		public SampleSerDe() {
 			super(SampleWritable.class, ThadoopSample.metaDataMap);

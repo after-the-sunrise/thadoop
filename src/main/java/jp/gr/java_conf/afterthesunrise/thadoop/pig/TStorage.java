@@ -1,4 +1,4 @@
-package jp.gr.java_conf.afterthesunrise.thadoop;
+package jp.gr.java_conf.afterthesunrise.thadoop.pig;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,6 +14,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import jp.gr.java_conf.afterthesunrise.thadoop.comparator.TFieldIdEnumComparator;
+import jp.gr.java_conf.afterthesunrise.thadoop.writable.TWritable;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -47,7 +48,7 @@ import org.apache.thrift.protocol.TType;
  * @param <W>
  *            Subclass of AbstractTWritable to handle.
  */
-public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends AbstractTWritable<? extends TBase<?, F>>>
+public abstract class TStorage<F extends TFieldIdEnum, W extends TWritable<? extends TBase<?, F>>>
 		extends FileInputLoadFunc implements LoadMetadata {
 
 	/**
@@ -82,7 +83,7 @@ public abstract class AbstractTStorage<F extends TFieldIdEnum, W extends Abstrac
 
 	private RecordReader<?, ?> reader;
 
-	protected AbstractTStorage(Class<W> clazz, Map<F, FieldMetaData> fields) {
+	protected TStorage(Class<W> clazz, Map<F, FieldMetaData> fields) {
 		this.clazz = checkNotNull(clazz);
 		this.fields = generateMap(fields);
 		this.cachedList = new ArrayList<Object>(this.fields.size());

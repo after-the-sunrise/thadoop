@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import jp.gr.java_conf.afterthesunrise.thadoop.comparator.TFieldIdEnumComparator;
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
 
