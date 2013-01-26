@@ -140,8 +140,11 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 
 			StructMetaData stmd = (StructMetaData) metaData;
 
+			@SuppressWarnings("rawtypes")
+			Class<? extends TBase> stclz = stmd.structClass;
+
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			ObjectInspector stoi = new TObjectInspector(stmd.structClass);
+			ObjectInspector stoi = new TObjectInspector(stclz, useEnumValue);
 
 			return stoi;
 
