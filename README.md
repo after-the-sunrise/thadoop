@@ -97,10 +97,10 @@ Create a subclass of `TSerDe.java`. This superclass implements the Hive's SerDe 
 
 [SampleSerDe.java]
 
-	public class SampleSerDe extends TSerDe<ThadoopSample._Fields, SampleWritable> {
+	public class SampleSerDe extends TSerDe {
 
 		public SampleSerDe() {
-			super(SampleWritable.class, ThadoopSample.metaDataMap);
+			super(SampleWritable.class);
 		}
 
 	}
