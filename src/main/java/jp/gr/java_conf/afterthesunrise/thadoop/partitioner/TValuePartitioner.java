@@ -1,5 +1,7 @@
 package jp.gr.java_conf.afterthesunrise.thadoop.partitioner;
 
+import jp.gr.java_conf.afterthesunrise.thadoop.writable.TWritable;
+
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.thrift.TBase;
@@ -8,8 +10,8 @@ import org.apache.thrift.TFieldIdEnum;
 /**
  * @author takanori.takase
  */
-public class TValuePartitioner<F extends TFieldIdEnum, T extends TBase<?, F>>
-		extends Partitioner<Writable, T> {
+public class TValuePartitioner<F extends TFieldIdEnum> extends
+		Partitioner<Writable, TWritable<? extends TBase<?, F>>> {
 
 	private static final int INIT = 31;
 
@@ -20,7 +22,10 @@ public class TValuePartitioner<F extends TFieldIdEnum, T extends TBase<?, F>>
 	}
 
 	@Override
-	public int getPartition(Writable key, T value, int numPartitions) {
+	public int getPartition(Writable key,
+			TWritable<? extends TBase<?, F>> value, int numPartitions) {
+
+		TBase<?, F> base = value.get();
 
 		int hash = INIT;
 
@@ -28,9 +33,9 @@ public class TValuePartitioner<F extends TFieldIdEnum, T extends TBase<?, F>>
 
 			F field = fields[i];
 
-			if (value.isSet(field)) {
+			if (base.isSet(field)) {
 
-				Object val = value.getFieldValue(field);
+				Object val = base.getFieldValue(field);
 
 				hash *= val.hashCode();
 
