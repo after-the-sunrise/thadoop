@@ -11,11 +11,11 @@ import java.util.Arrays;
 import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.hadoop.hive.serde2.io.ShortWritable;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.ShortWritable;
 import org.junit.Before;
 import org.junit.Test;
 
