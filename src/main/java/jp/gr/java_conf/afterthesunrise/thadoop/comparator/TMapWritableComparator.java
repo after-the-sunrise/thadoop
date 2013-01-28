@@ -3,11 +3,11 @@ package jp.gr.java_conf.afterthesunrise.thadoop.comparator;
 import java.io.IOError;
 import java.io.IOException;
 
-import org.apache.hadoop.hive.serde2.io.ShortWritable;
 import org.apache.hadoop.io.DataInputBuffer;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.RawComparator;
+import org.apache.hadoop.io.ShortWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.thrift.TFieldIdEnum;
