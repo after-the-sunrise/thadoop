@@ -3,9 +3,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>jp.gr.java_conf.afterthesunrise</groupId>
+	<groupId>com.after_sunrise.oss</groupId>
 	<artifactId>thadoop</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Thadoop</name>
@@ -15,11 +15,9 @@
 
 	<developers>
 		<developer>
-			<id>after-the-sunrise</id>
+			<id>after-sunrise</id>
 			<name>Takanori Takase</name>
 			<timezone>+9</timezone>
-			<organization>individual</organization>
-			<organizationUrl>http://afterthesunrise.wordpress.com/</organizationUrl>
 		</developer>
 	</developers>
 
@@ -54,20 +52,25 @@
 
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>https://ats.ci.cloudbees.com/job/${project.artifactId}/</url>
+		<url>http://after-sunrise.com/job/${project.artifactId}/</url>
 	</ciManagement>
 
 	<distributionManagement>
 		<repository>
-			<id>ats-release</id>
-			<name>CloudBees ats-release</name>
-			<url>https://repository-ats.forge.cloudbees.com/release/</url>
+			<id>s3.after-sunrise</id>
+			<name>S3 after-sunrise Release</name>
+			<url>s3://after-sunrise/release/</url>
 		</repository>
 		<snapshotRepository>
-			<id>ats-snapshot</id>
-			<name>CloudBees ats-snapshot</name>
-			<url>https://repository-ats.forge.cloudbees.com/snapshot/</url>
+			<id>s3.after-sunrise</id>
+			<name>S3 after-sunrise Snapshot</name>
+			<url>s3://after-sunrise/snapshot/</url>
 		</snapshotRepository>
+		<site>
+			<id>s3.after-sunrise</id>
+			<name>S3 after-sunrise Site</name>
+			<url>s3://after-sunrise/site/</url>
+		</site>
 	</distributionManagement>
 
 	<prerequisites>
@@ -90,6 +93,7 @@
 		<build.plugin.findbugs.version>2.5.2</build.plugin.findbugs.version>
 		<build.plugin.checkstyle.version>2.9.1</build.plugin.checkstyle.version>
 		<build.plugin.javadoc.version>2.9</build.plugin.javadoc.version>
+		<build.plugin.aws.version>3.0.0.RELEASE</build.plugin.aws.version>
 
 		<dependency.guava.version>13.0.1</dependency.guava.version>
 		<dependency.hadoop.version>2.0.2-alpha</dependency.hadoop.version>
@@ -238,6 +242,13 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build.aws</groupId>
+				<artifactId>org.springframework.build.aws.maven</artifactId>
+				<version>${build.plugin.aws.version}</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<reporting>
