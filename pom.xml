@@ -52,7 +52,7 @@
 
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>http://after-sunrise.com/job/${project.artifactId}/</url>
+		<url>http://after-sunrise.com/jenkins/job/${project.artifactId}/</url>
 	</ciManagement>
 
 	<distributionManagement>
@@ -86,6 +86,7 @@
 		<build.plugin.helper.version>1.7</build.plugin.helper.version>
 		<build.plugin.jar.version>2.4</build.plugin.jar.version>
 		<build.plugin.exec.version>1.2.1</build.plugin.exec.version>
+		<build.plugin.release.version>2.4.1</build.plugin.release.version>
 		<build.plugin.report.version>2.6</build.plugin.report.version>
 		<build.plugin.site.version>3.2</build.plugin.site.version>
 		<build.plugin.surefire.version>2.13</build.plugin.surefire.version>
@@ -130,6 +131,16 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${build.plugin.release.version}</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<pushChanges>false</pushChanges>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
