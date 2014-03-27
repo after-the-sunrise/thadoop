@@ -140,6 +140,7 @@
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<pushChanges>false</pushChanges>
+					<resume>false</resume>
 					<tagNameFormat>@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
