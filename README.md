@@ -1,36 +1,37 @@
 # Thadoop
-Thadoop is a simple set of wrapper templates to integrate Apache Thrift implementation with Hadoop's Writable interface.
+Thadoop (Thrift + Hadoop) is a simple set of wrapper templates to integrate Apache Thrift implementation with Hadoop's Writable interface. 
+
+The goal of this module is to provide a quick and easy way to use auto-generate thrift codes as a Input/Output for the Hadoop related tasks.
 
 ## Prerequisites
 * JDK 1.7+
-* Maven 3.0+
+* Maven 3.0.4+
 * Working Thrift generated codes
 * Working Hadoop Environment
-* (Preferred) Eclipse 3.7+ 
 
-  (Sample idl `src/thrift/idl/thadoop.thrift` and codes `src/thrift/gen/*` are included for convenience.)
+  (Sample idl `src/thrift/idl/thadoop.thrift` and generated Java codes `src/thrift/java/*` are included for convenience.)
 
 ## Maven dependency configuration
-In your maven project file, add thadoop module's maven repository and dependency.
+In the maven project file, add maven repository and dependency to retrieve the thadoop module.
 
 [pom.xml]
 
 	<repositories>
 		<repository>
-			<id>ats-release</id>
-   			<name>CloudBees ats-release</name>
-   			<url>https://repository-ats.forge.cloudbees.com/release/</url>
+			<id>rp.after-sunrise_release</id>
+			<name>after-sunrise Release</name>
+			<url>https://rp.after-sunrise.com/maven/release</url>
 		</repository>
 		<repository>
-			<id>ats-snapshot</id>
-			<name>CloudBees ats-snapshot</name>
-			<url>https://repository-ats.forge.cloudbees.com/snapshot/</url>
+			<id>rp.after-sunrise_snapshot</id>
+			<name>after-sunrise Snapshot</name>
+			<url>https://rp.after-sunrise.com/maven/snapshot</url>
 		</repository>
 	</repositories>
 	
 	<dependencies>
 		<dependency>
-			<groupId>jp.gr.java_conf.afterthesunrise</groupId>
+			<groupId>com.after_sunrise.oss</groupId>
 			<artifactId>thadoop</artifactId>
 			<version>${LATEST_VERSION_HERE}</version>
 		</dependency>
@@ -38,8 +39,8 @@ In your maven project file, add thadoop module's maven repository and dependency
 
 ## Implementation
 
-### Writable
-This is the very base of all the other integrations. You will need to prepare your own thrift beforehand. Once you have generated your thrift implementation, create a subclass of `TWritable.java` similar to the sample below. (Swap 'ThadoopSample' with your thrift class)
+### TWritable
+This is the very base of all the other integrations. Implement a subclass of the custom `TWritable` first. (Swap `ThadoopSample` class in the sample below.)
 
 [SampleWritable.java]
 
@@ -49,12 +50,12 @@ This is the very base of all the other integrations. You will need to prepare yo
 		
 		@Override
 		public ThadoopSample get() {
-			return base;
+			return base; // Note : Do NOT create new instance here !!!
 		}
 		
 	}
 
-You can feed this subclass to Mapper/Reducer directly, as the superclass implements the Hadoop's writable interface.
+This subclass can be fed to Mapper/Reducer directly, as the superclass implements the Hadoop's writable interface.
 
 [SampleJob.java]
 
@@ -75,7 +76,7 @@ You can feed this subclass to Mapper/Reducer directly, as the superclass impleme
 
 
 ### Pig Storage
-Create a subclass of `TStorage.java`. This superclass implements the Pig's load function. 
+Create a subclass of `TStorage`. This superclass implements the Pig's load function. 
 * Handles thrift records stored in Hadoop's Sequence file format.
 * Key is ignored, and only the value will be parsed.
 
@@ -93,7 +94,7 @@ Subclass implementation should look like something below:
 
 
 ### Hive SerDe
-Create a subclass of `TSerDe.java`. This superclass implements the Hive's SerDe interface.
+Create a subclass of `TSerDe`. This superclass implements the Hive's SerDe interface.
 
 [SampleSerDe.java]
 

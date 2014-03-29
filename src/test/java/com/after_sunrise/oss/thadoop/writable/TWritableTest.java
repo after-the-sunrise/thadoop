@@ -15,14 +15,16 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopStruct;
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopType;
-
+import org.apache.commons.lang.StringUtils;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample;
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields;
+import com.after_sunrise.oss.thadoop.sample.ThadoopStruct;
+import com.after_sunrise.oss.thadoop.sample.ThadoopType;
 import com.google.common.collect.Sets;
 
 /**
@@ -30,13 +32,34 @@ import com.google.common.collect.Sets;
  */
 public class TWritableTest {
 
-	/**
-	 * Sample subclass implementation to use in this test case. Refer to
-	 * "src/thrift/idl/thadoop.thrift" for the type template.
-	 */
 	public static class SampleWritable extends TWritable<ThadoopSample> {
 
 		private final ThadoopSample base = new ThadoopSample();
+
+		@Override
+		public ThadoopSample get() {
+			return base;
+		}
+
+	}
+
+	public static class ExceptionWritable extends TWritable<ThadoopSample> {
+
+		private final ThadoopSample base = new ThadoopSample() {
+
+			private static final long serialVersionUID = 3602583259714691691L;
+
+			@Override
+			public void read(TProtocol iprot) throws TException {
+				throw new TException("test");
+			}
+
+			@Override
+			public void write(TProtocol oprot) throws TException {
+				throw new TException("test");
+			}
+
+		};
 
 		@Override
 		public ThadoopSample get() {
@@ -81,6 +104,24 @@ public class TWritableTest {
 
 	}
 
+	@Test(expected = IOException.class)
+	public void testReadFields_Exception() throws IOException {
+
+		ExceptionWritable ex = new ExceptionWritable();
+
+		process(ex, writable2);
+
+	}
+
+	@Test(expected = IOException.class)
+	public void testWrite_Exception() throws IOException {
+
+		ExceptionWritable ex = new ExceptionWritable();
+
+		process(writable1, ex);
+
+	}
+
 	@Test
 	public void testReadWrite_NoValues() throws IOException {
 
@@ -90,6 +131,34 @@ public class TWritableTest {
 
 		for (_Fields f : _Fields.values()) {
 			assertFalse(sample2.isSet(f));
+		}
+
+	}
+
+	@Test
+	public void testReadWrite_LargeValues() throws IOException {
+
+		sample1.clear();
+
+		// Something large enough to expand the buffer
+		String value = StringUtils.repeat("test", Short.MAX_VALUE);
+
+		writable1.get().setVString(value);
+
+		process(writable1, writable2);
+
+		for (_Fields f : _Fields.values()) {
+
+			if (f == _Fields.V_STRING) {
+
+				assertEquals(value, writable2.get().getVString());
+
+			} else {
+
+				assertFalse(sample2.isSet(f));
+
+			}
+
 		}
 
 	}

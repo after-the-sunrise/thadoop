@@ -1,4 +1,4 @@
-package com.after_sunrise.oss.thadoop.comparator;
+package com.after_sunrise.oss.thadoop.common;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -7,8 +7,6 @@ import org.apache.thrift.TFieldIdEnum;
 
 /**
  * Compare natural ordering of {@code TFieldIdEnum#getThriftFieldId()}.
- * 
- * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
  * 
  * @author takanori.takase
  * @param <F>
@@ -22,6 +20,11 @@ public final class TFieldIdEnumComparator<T extends TFieldIdEnum> implements
 	@SuppressWarnings("rawtypes")
 	private static final Comparator INSTANCE = new TFieldIdEnumComparator();
 
+	/**
+	 * Retrieve a singleton instance of the comparator.
+	 * 
+	 * @return singleton instance
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends TFieldIdEnum> Comparator<T> get() {
 		return INSTANCE;

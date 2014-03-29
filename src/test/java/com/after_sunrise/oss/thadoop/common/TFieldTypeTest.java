@@ -1,4 +1,4 @@
-package com.after_sunrise.oss.thadoop.code;
+package com.after_sunrise.oss.thadoop.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

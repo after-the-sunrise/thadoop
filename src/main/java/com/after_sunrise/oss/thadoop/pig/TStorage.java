@@ -35,7 +35,7 @@ import org.apache.thrift.TFieldIdEnum;
 import org.apache.thrift.meta_data.FieldMetaData;
 import org.apache.thrift.protocol.TType;
 
-import com.after_sunrise.oss.thadoop.comparator.TFieldIdEnumComparator;
+import com.after_sunrise.oss.thadoop.common.TFieldIdEnumComparator;
 import com.after_sunrise.oss.thadoop.writable.TWritable;
 
 /**

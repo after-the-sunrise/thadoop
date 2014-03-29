@@ -1,35 +1,39 @@
 package com.after_sunrise.oss.thadoop.pig;
 
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_BOOLEAN;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_BYTE;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_DOUBLE;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_INT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_LONG;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_SHORT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_STRING;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_BOOLEAN;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_BYTE;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_DOUBLE;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_INT;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_LONG;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_SHORT;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_STRING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Map;
 
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
-
+import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.RecordReader;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.pig.ResourceSchema;
 import org.apache.pig.ResourceSchema.ResourceFieldSchema;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
+import org.apache.thrift.meta_data.FieldMetaData;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample;
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields;
 import com.after_sunrise.oss.thadoop.writable.TWritable;
 
 /**
@@ -67,6 +71,18 @@ public class TStorageTest {
 	@Before
 	public void setUp() {
 		target = new SampleStorage();
+	}
+
+	@Test
+	public void testSetLocation() throws IOException {
+
+		Job job = Job.getInstance();
+
+		target.setLocation("hdfs://localhost:80/test", job);
+
+		assertEquals("hdfs://localhost:80/test",
+				job.getConfiguration().get(FileInputFormat.INPUT_DIR));
+
 	}
 
 	@Test
@@ -112,6 +128,20 @@ public class TStorageTest {
 
 	}
 
+	@Test(expected = IOException.class)
+	public void testGetNext_Interrupted() throws Exception {
+
+		@SuppressWarnings("unchecked")
+		RecordReader<?, SampleWritable> reader = mock(RecordReader.class);
+
+		doThrow(new InterruptedException("test")).when(reader).nextKeyValue();
+
+		target.prepareToRead(reader, null);
+
+		target.getNext();
+
+	}
+
 	@Test
 	public void testGetSchema() throws IOException {
 
@@ -139,6 +169,35 @@ public class TStorageTest {
 		assertThat(fields[5].getType(), equalTo(DataType.DOUBLE));
 		assertThat(fields[6].getType(), equalTo(DataType.CHARARRAY));
 
+	}
+
+	@Test(expected = IOException.class)
+	public void testGetSchema_NoPigDataType() throws IOException {
+
+		new SampleStorage() {
+			@Override
+			protected Byte extractDataType(_Fields f, FieldMetaData d,
+					Map<Byte, Byte> m) {
+				return null;
+			}
+
+		}.getSchema(null, null);
+
+	}
+
+	@Test
+	public void testGetStatistics() {
+		assertNull(target.getStatistics(null, null));
+	}
+
+	@Test
+	public void testGetPartitionKeys() {
+		assertNull(target.getPartitionKeys(null, null));
+	}
+
+	@Test
+	public void testSetPartitionFilter() {
+		target.setPartitionFilter(null);
 	}
 
 }

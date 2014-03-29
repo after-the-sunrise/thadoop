@@ -1,8 +1,10 @@
-package com.after_sunrise.oss.thadoop.code;
+package com.after_sunrise.oss.thadoop.common;
 
 import org.apache.thrift.protocol.TType;
 
 /**
+ * {@link Enum} to replicate all fields in {@link TType}.
+ * 
  * @author takanori.takase
  */
 public enum TFieldType {
@@ -65,6 +67,13 @@ public enum TFieldType {
 
 	}
 
+	/**
+	 * Find element by id.
+	 * 
+	 * @param id
+	 *            Id to search for
+	 * @return Field element for the id. Null if not found.
+	 */
 	public static TFieldType find(byte id) {
 
 		if (id < 0 || VALS.length <= id) {

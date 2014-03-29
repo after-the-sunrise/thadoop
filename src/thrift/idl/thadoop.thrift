@@ -1,5 +1,5 @@
 
-namespace java jp.gr.java_conf.afterthesunrise.thadoop.sample
+namespace java com.after_sunrise.oss.thadoop.sample
 
 enum ThadoopType {
  FOO

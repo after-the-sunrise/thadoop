@@ -1,8 +1,8 @@
-package com.after_sunrise.oss.thadoop.comparator;
+package com.after_sunrise.oss.thadoop.common;
 
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_INT;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_LONG;
-import static jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields.V_SHORT;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_INT;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_LONG;
+import static com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields.V_SHORT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample;
-import jp.gr.java_conf.afterthesunrise.thadoop.sample.ThadoopSample._Fields;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample;
+import com.after_sunrise.oss.thadoop.sample.ThadoopSample._Fields;
 
 /**
  * @author takanori.takase
@@ -26,6 +26,19 @@ public class TComparatorTest {
 	@Before
 	public void setUp() throws Exception {
 		target = new TComparator<_Fields>(V_SHORT, V_INT, V_LONG);
+	}
+
+	@Test
+	public void testToString() {
+
+		assertEquals("TComparator[{V_SHORT,V_INT,V_LONG}]", target.toString());
+
+		assertEquals("TComparator[{" //
+				+ "V_BOOLEAN,V_BYTE,V_SHORT,V_INT,V_LONG," //
+				+ "V_DOUBLE,V_STRING,V_BINARY,V_LIST," //
+				+ "V_SET,V_MAP,V_STRUCT}]", //
+				new TComparator<_Fields>(_Fields.class).toString());
+
 	}
 
 	@Test

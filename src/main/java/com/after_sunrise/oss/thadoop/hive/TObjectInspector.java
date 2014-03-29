@@ -17,7 +17,6 @@ import org.apache.hadoop.hive.serde2.objectinspector.StructField;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.thrift.TBase;
-import org.apache.thrift.TEnum;
 import org.apache.thrift.TFieldIdEnum;
 import org.apache.thrift.meta_data.FieldMetaData;
 import org.apache.thrift.meta_data.FieldValueMetaData;
@@ -41,13 +40,7 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 
 	private final Map<String, StructField> fieldMap;
 
-	private final boolean useEnumValue;
-
 	public TObjectInspector(Class<B> clazz) {
-		this(clazz, false);
-	}
-
-	public TObjectInspector(Class<B> clazz, boolean useEnumValue) {
 
 		this.clazz = checkNotNull(clazz);
 
@@ -55,15 +48,12 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 
 		this.fieldMap = mapFieldName(fields);
 
-		this.useEnumValue = useEnumValue;
-
 	}
 
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this, SHORT_PREFIX_STYLE);
 		builder.append("clazz", clazz.getSimpleName());
-		builder.append("useEnumValue", useEnumValue);
 		return builder.toString();
 	}
 
@@ -110,6 +100,8 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 			return PrimitiveObjectInspectorFactory.javaLongObjectInspector;
 		case TType.STRING:
 			return PrimitiveObjectInspectorFactory.javaStringObjectInspector;
+		case TType.ENUM:
+			return PrimitiveObjectInspectorFactory.javaStringObjectInspector;
 		case TType.LIST:
 
 			ListMetaData lmd = (ListMetaData) metaData;
@@ -144,21 +136,13 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 			Class<? extends TBase> stclz = stmd.structClass;
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			ObjectInspector stoi = new TObjectInspector(stclz, useEnumValue);
+			ObjectInspector stoi = new TObjectInspector(stclz);
 
 			return stoi;
 
-		case TType.ENUM:
-
-			if (useEnumValue) {
-				return PrimitiveObjectInspectorFactory.javaIntObjectInspector;
-			}
-
-			return PrimitiveObjectInspectorFactory.javaStringObjectInspector;
-
 		}
 
-		throw new UnsupportedOperationException("Unknown type : " + type);
+		throw new UnsupportedOperationException("Unsupported type : " + type);
 
 	}
 
@@ -237,11 +221,7 @@ public class TObjectInspector<B extends TBase<?, ?>> extends
 		Object value = base.getFieldValue(field.getField());
 
 		if (value != null && field.getType() == TType.ENUM) {
-			if (useEnumValue) {
-				value = ((TEnum) value).getValue();
-			} else {
-				value = ((Enum<?>) value).name();
-			}
+			value = ((Enum<?>) value).name();
 		}
 
 		return value;
