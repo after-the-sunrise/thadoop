@@ -1,4 +1,4 @@
-# Thadoop
+# Thadoop [![Build Status](https://travis-ci.org/after-the-sunrise/thadoop.svg?branch=master)](https://travis-ci.org/after-the-sunrise/thadoop)
 Thadoop (Thrift + Hadoop) is a simple set of wrapper templates to integrate Apache Thrift implementation with Hadoop's Writable interface. 
 
 The goal of this module is to provide a quick and easy way to use auto-generate thrift codes as a Input/Output for the Hadoop related tasks.
