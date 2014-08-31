@@ -8,4 +8,4 @@ jdk:
 
 notifications:
     email:
-        - notification@after-sunrise.com
+        - scm@after-sunrise.com
