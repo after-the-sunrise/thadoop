@@ -55,8 +55,8 @@ public class TWritableComparator<F extends Enum<F> & TFieldIdEnum> implements
 	 * 
 	 * @param clazz
 	 *            Class to create instance for deserialization.
-	 * @param fieldClazz
-	 *            {@code _Field} class.
+	 * @param fields
+	 *            {@code _Field} instances.
 	 */
 	public TWritableComparator(
 			Class<? extends TWritable<? extends TBase<?, F>>> clazz,
