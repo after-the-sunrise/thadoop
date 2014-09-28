@@ -43,7 +43,7 @@
 		<connection>scm:git:git://github.com/after-the-sunrise/${project.artifactId}.git</connection>
 		<developerConnection>scm:git:git@github.com:after-the-sunrise/${project.artifactId}.git</developerConnection>
 	  <tag>HEAD</tag>
-  </scm>
+	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
@@ -79,19 +79,19 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<build.plugin.compiler.version>3.1</build.plugin.compiler.version>
-		<build.plugin.compiler.source>1.6</build.plugin.compiler.source>
-		<build.plugin.compiler.target>1.6</build.plugin.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<build.plugin.sources.version>2.2.1</build.plugin.sources.version>
 		<build.plugin.helper.version>1.7</build.plugin.helper.version>
 		<build.plugin.jar.version>2.4</build.plugin.jar.version>
 		<build.plugin.exec.version>1.2.1</build.plugin.exec.version>
 		<build.plugin.release.version>2.5</build.plugin.release.version>
 		<build.plugin.report.version>2.7</build.plugin.report.version>
-		<build.plugin.site.version>3.3</build.plugin.site.version>
 		<build.plugin.surefire.version>2.17</build.plugin.surefire.version>
 		<build.plugin.coberture.version>2.6</build.plugin.coberture.version>
-		<build.plugin.findbugs.version>2.5.3</build.plugin.findbugs.version>
+		<build.plugin.findbugs.version>3.0.0</build.plugin.findbugs.version>
 		<build.plugin.checkstyle.version>2.12</build.plugin.checkstyle.version>
 		<build.plugin.javadoc.version>2.9.1</build.plugin.javadoc.version>
 		<build.plugin.jxr.version>2.4</build.plugin.jxr.version>
@@ -133,17 +133,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${build.plugin.compiler.version}</version>
-				<configuration>
-					<source>${build.plugin.compiler.source}</source>
-					<target>${build.plugin.compiler.target}</target>
-					<showWarnings>true</showWarnings>
-					<showDeprecation>true</showDeprecation>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -210,11 +199,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>${build.plugin.report.version}</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>${build.plugin.site.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
