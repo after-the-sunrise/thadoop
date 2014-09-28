@@ -9,7 +9,7 @@ import org.apache.thrift.TFieldIdEnum;
  * Compare natural ordering of {@code TFieldIdEnum#getThriftFieldId()}.
  * 
  * @author takanori.takase
- * @param <F>
+ * @param <T>
  *            Thrift fields to compare.
  */
 public final class TFieldIdEnumComparator<T extends TFieldIdEnum> implements
