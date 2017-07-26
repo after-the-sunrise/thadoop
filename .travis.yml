@@ -4,10 +4,6 @@ jdk:
     - oraclejdk7
     - openjdk7
 
-env:
-    global:
-        gpg.skip=true
-
 notifications:
     email:
         - scm@after-sunrise.com
