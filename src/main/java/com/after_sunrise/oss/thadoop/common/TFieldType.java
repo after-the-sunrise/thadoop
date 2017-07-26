@@ -4,84 +4,83 @@ import org.apache.thrift.protocol.TType;
 
 /**
  * {@link Enum} to replicate all fields in {@link TType}.
- * 
+ *
  * @author takanori.takase
  */
 public enum TFieldType {
 
-	STOP(TType.STOP),
+    STOP(TType.STOP),
 
-	VOID(TType.VOID),
+    VOID(TType.VOID),
 
-	BOOL(TType.BOOL),
+    BOOL(TType.BOOL),
 
-	BYTE(TType.BYTE),
+    BYTE(TType.BYTE),
 
-	DOUBLE(TType.DOUBLE),
+    DOUBLE(TType.DOUBLE),
 
-	I16(TType.I16),
+    I16(TType.I16),
 
-	I32(TType.I32),
+    I32(TType.I32),
 
-	I64(TType.I64),
+    I64(TType.I64),
 
-	STRING(TType.STRING),
+    STRING(TType.STRING),
 
-	STRUCT(TType.STRUCT),
+    STRUCT(TType.STRUCT),
 
-	MAP(TType.MAP),
+    MAP(TType.MAP),
 
-	SET(TType.SET),
+    SET(TType.SET),
 
-	LIST(TType.LIST),
+    LIST(TType.LIST),
 
-	ENUM(TType.ENUM);
+    ENUM(TType.ENUM);
 
-	private final byte id;
+    private final byte id;
 
-	private TFieldType(byte id) {
-		this.id = id;
-	}
+    private TFieldType(byte id) {
+        this.id = id;
+    }
 
-	public byte getId() {
-		return id;
-	}
+    public byte getId() {
+        return id;
+    }
 
-	private static final TFieldType[] VALS;
+    private static final TFieldType[] VALS;
 
-	static {
+    static {
 
-		int min = Byte.MAX_VALUE;
-		int max = Byte.MIN_VALUE;
+        int min = Byte.MAX_VALUE;
+        int max = Byte.MIN_VALUE;
 
-		for (TFieldType type : values()) {
-			min = Math.min(min, type.id);
-			max = Math.max(max, type.id);
-		}
+        for (TFieldType type : values()) {
+            min = Math.min(min, type.id);
+            max = Math.max(max, type.id);
+        }
 
-		VALS = new TFieldType[Math.abs(min) + max + 1];
+        VALS = new TFieldType[Math.abs(min) + max + 1];
 
-		for (TFieldType type : values()) {
-			VALS[type.id + Math.abs(min)] = type;
-		}
+        for (TFieldType type : values()) {
+            VALS[type.id + Math.abs(min)] = type;
+        }
 
-	}
+    }
 
-	/**
-	 * Find element by id.
-	 * 
-	 * @param id
-	 *            Id to search for
-	 * @return Field element for the id. Null if not found.
-	 */
-	public static TFieldType find(byte id) {
+    /**
+     * Find element by id.
+     *
+     * @param id Id to search for
+     * @return Field element for the id. Null if not found.
+     */
+    public static TFieldType find(byte id) {
 
-		if (id < 0 || VALS.length <= id) {
-			return null;
-		}
+        if (id < 0 || VALS.length <= id) {
+            return null;
+        }
 
-		return VALS[id];
+        return VALS[id];
 
-	}
+    }
 
 }

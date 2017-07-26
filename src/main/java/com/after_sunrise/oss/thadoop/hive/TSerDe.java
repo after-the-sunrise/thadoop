@@ -1,7 +1,6 @@
 package com.after_sunrise.oss.thadoop.hive;
 
-import java.util.Properties;
-
+import com.after_sunrise.oss.thadoop.writable.TWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde2.SerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
@@ -14,113 +13,113 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TMemoryBuffer;
 
-import com.after_sunrise.oss.thadoop.writable.TWritable;
+import java.util.Properties;
 
 /**
  * @author takanori.takase
  */
 public class TSerDe implements SerDe {
 
-	public static final String TWRITABLE = "tserde.writable";
+    public static final String TWRITABLE = "tserde.writable";
 
-	private final Class<? extends TWritable<?>> clazz;
+    private final Class<? extends TWritable<?>> clazz;
 
-	private TWritable<?> writable;
+    private TWritable<?> writable;
 
-	private TObjectInspector<?> inspector;
+    private TObjectInspector<?> inspector;
 
-	public TSerDe() {
-		this(null);
-	}
+    public TSerDe() {
+        this(null);
+    }
 
-	public TSerDe(Class<? extends TWritable<?>> clazz) {
-		this.clazz = clazz;
-	}
+    public TSerDe(Class<? extends TWritable<?>> clazz) {
+        this.clazz = clazz;
+    }
 
-	@Override
-	public void initialize(Configuration conf, Properties prop)
-			throws SerDeException {
+    @Override
+    public void initialize(Configuration conf, Properties prop)
+            throws SerDeException {
 
-		try {
+        try {
 
-			if (clazz == null) {
+            if (clazz == null) {
 
-				String className = prop.getProperty(TWRITABLE);
+                String className = prop.getProperty(TWRITABLE);
 
-				Class<?> clz = Class.forName(className);
+                Class<?> clz = Class.forName(className);
 
-				writable = (TWritable<?>) clz.newInstance();
+                writable = (TWritable<?>) clz.newInstance();
 
-			} else {
+            } else {
 
-				writable = clazz.newInstance();
+                writable = clazz.newInstance();
 
-			}
+            }
 
-			TBase<?, ?> base = writable.get();
+            TBase<?, ?> base = writable.get();
 
-			inspector = create(base.getClass());
+            inspector = create(base.getClass());
 
-		} catch (Exception e) {
-			throw new SerDeException(e);
-		}
+        } catch (Exception e) {
+            throw new SerDeException(e);
+        }
 
-	}
+    }
 
-	private <T extends TBase<?, ?>> TObjectInspector<T> create(Class<T> clazz) {
-		return new TObjectInspector<T>(clazz);
-	}
+    private <T extends TBase<?, ?>> TObjectInspector<T> create(Class<T> clazz) {
+        return new TObjectInspector<T>(clazz);
+    }
 
-	@Override
-	public ObjectInspector getObjectInspector() throws SerDeException {
-		return inspector;
-	}
+    @Override
+    public ObjectInspector getObjectInspector() throws SerDeException {
+        return inspector;
+    }
 
-	@Override
-	public Object deserialize(Writable writable) throws SerDeException {
+    @Override
+    public Object deserialize(Writable writable) throws SerDeException {
 
-		TWritable<?> w = (TWritable<?>) writable;
+        TWritable<?> w = (TWritable<?>) writable;
 
-		return w.get();
+        return w.get();
 
-	}
+    }
 
-	@Override
-	public SerDeStats getSerDeStats() {
-		return null;
-	}
+    @Override
+    public SerDeStats getSerDeStats() {
+        return null;
+    }
 
-	@Override
-	public Class<? extends Writable> getSerializedClass() {
-		return writable.getClass();
-	}
+    @Override
+    public Class<? extends Writable> getSerializedClass() {
+        return writable.getClass();
+    }
 
-	@Override
-	public Writable serialize(Object data, ObjectInspector inspector)
-			throws SerDeException {
+    @Override
+    public Writable serialize(Object data, ObjectInspector inspector)
+            throws SerDeException {
 
-		TBase<?, ?> from = (TBase<?, ?>) data;
+        TBase<?, ?> from = (TBase<?, ?>) data;
 
-		TBase<?, ?> to = writable.get();
+        TBase<?, ?> to = writable.get();
 
-		TMemoryBuffer buffer = new TMemoryBuffer(Byte.MAX_VALUE);
+        TMemoryBuffer buffer = new TMemoryBuffer(Byte.MAX_VALUE);
 
-		TProtocol protocol = new TBinaryProtocol(buffer);
+        TProtocol protocol = new TBinaryProtocol(buffer);
 
-		try {
+        try {
 
-			from.write(protocol);
+            from.write(protocol);
 
-			to.clear();
+            to.clear();
 
-			to.read(protocol);
+            to.read(protocol);
 
-		} catch (TException e) {
-			throw new SerDeException(e);
-		}
+        } catch (TException e) {
+            throw new SerDeException(e);
+        }
 
-		return writable;
+        return writable;
 
-	}
+    }
 
 }

@@ -1,9 +1,5 @@
 package com.after_sunrise.oss.thadoop.writable;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.thrift.TBase;
@@ -14,12 +10,16 @@ import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.transport.AutoExpandingBufferWriteTransport;
 import org.apache.thrift.transport.TMemoryInputTransport;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 /**
  * <p>
  * Template implementation to serialize and deserialize a thrift instance via
  * Hadoop's {@link Writable} interface.
  * </p>
- * 
+ * <p>
  * <p>
  * Subclass must implement {@code get()} to return the actual thrift instance to
  * be used. Given instance will always be initialized before deserialization,
@@ -28,20 +28,20 @@ import org.apache.thrift.transport.TMemoryInputTransport;
  * if you need to keep each deserialized object individually. A typical subclass
  * implementation may be similar to the below example:
  * </p>
- * 
+ * <p>
  * <pre>
  * public class SomeWritable extends AbstractTWritable&lt;SomeThriftType&gt; {
- * 
+ *
  * 	private final SomeThriftType instance = new SomeThriftType();
- * 
- * 	{@code @Override}
+ *
+ *    {@code @Override}
  * 	public SomeThriftType get() {
  * 		return instance;
- * 	}
- * 
+ *    }
+ *
  * }
  * </pre>
- * 
+ * <p>
  * <p>
  * Serialized bytes consist of two parts: the data length and the data. First
  * part contains the byte length of the following data bytes, and the length is
@@ -50,93 +50,91 @@ import org.apache.thrift.transport.TMemoryInputTransport;
  * (2,147,483,647 bytes). Second part contain the data in primitive byte array
  * format, using the {@link TCompactProtocol}.
  * </p>
- * 
+ *
+ * @param <T> Thrift sub-type to handle.
  * @author takanori.takase
- * 
- * @param <T>
- *            Thrift sub-type to handle.
  */
 public abstract class TWritable<T extends TBase<?, ?>> implements Writable {
 
-	private static final int INIT = 128;
+    private static final int INIT = 128;
 
-	private static final double GROWTH = 1.2;
+    private static final double GROWTH = 1.2;
 
-	private final TMemoryInputTransport inputTransport;
+    private final TMemoryInputTransport inputTransport;
 
-	private final AutoExpandingBufferWriteTransport outputTransport;
+    private final AutoExpandingBufferWriteTransport outputTransport;
 
-	private final TProtocol inputProtocol;
+    private final TProtocol inputProtocol;
 
-	private final TProtocol outputProtocol;
+    private final TProtocol outputProtocol;
 
-	public TWritable() {
-		this(new TCompactProtocol.Factory());
-	}
+    public TWritable() {
+        this(new TCompactProtocol.Factory());
+    }
 
-	public TWritable(TProtocolFactory factory) {
-		this(factory, INIT, GROWTH);
-	}
+    public TWritable(TProtocolFactory factory) {
+        this(factory, INIT, GROWTH);
+    }
 
-	public TWritable(TProtocolFactory factory, int init, double growth) {
-		inputTransport = new TMemoryInputTransport(new byte[init]);
-		outputTransport = new AutoExpandingBufferWriteTransport(init, growth);
-		inputProtocol = factory.getProtocol(inputTransport);
-		outputProtocol = factory.getProtocol(outputTransport);
-	}
+    public TWritable(TProtocolFactory factory, int init, double growth) {
+        inputTransport = new TMemoryInputTransport(new byte[init]);
+        outputTransport = new AutoExpandingBufferWriteTransport(init, growth);
+        inputProtocol = factory.getProtocol(inputTransport);
+        outputProtocol = factory.getProtocol(outputTransport);
+    }
 
-	/**
-	 * Retrieve T instance. This method will only be invoked once per read or
-	 * write operation.
-	 * 
-	 * @return T instance
-	 */
-	public abstract T get();
+    /**
+     * Retrieve T instance. This method will only be invoked once per read or
+     * write operation.
+     *
+     * @return T instance
+     */
+    public abstract T get();
 
-	@Override
-	public void readFields(DataInput in) throws IOException {
+    @Override
+    public void readFields(DataInput in) throws IOException {
 
-		int length = WritableUtils.readVInt(in);
+        int length = WritableUtils.readVInt(in);
 
-		byte[] bytes = inputTransport.getBuffer();
+        byte[] bytes = inputTransport.getBuffer();
 
-		if (bytes.length < length) {
-			bytes = new byte[length];
-		}
+        if (bytes.length < length) {
+            bytes = new byte[length];
+        }
 
-		in.readFully(bytes, 0, length);
+        in.readFully(bytes, 0, length);
 
-		inputTransport.reset(bytes, 0, length);
+        inputTransport.reset(bytes, 0, length);
 
-		T base = get();
+        T base = get();
 
-		base.clear();
+        base.clear();
 
-		try {
-			base.read(inputProtocol);
-		} catch (TException e) {
-			throw new IOException(e);
-		}
+        try {
+            base.read(inputProtocol);
+        } catch (TException e) {
+            throw new IOException(e);
+        }
 
-	}
+    }
 
-	@Override
-	public void write(DataOutput out) throws IOException {
+    @Override
+    public void write(DataOutput out) throws IOException {
 
-		outputTransport.reset();
+        outputTransport.reset();
 
-		try {
-			get().write(outputProtocol);
-		} catch (TException e) {
-			throw new IOException(e);
-		}
+        try {
+            get().write(outputProtocol);
+        } catch (TException e) {
+            throw new IOException(e);
+        }
 
-		int length = outputTransport.getPos();
+        int length = outputTransport.getPos();
 
-		WritableUtils.writeVInt(out, length);
+        WritableUtils.writeVInt(out, length);
 
-		out.write(outputTransport.getBuf().array(), 0, length);
+        out.write(outputTransport.getBuf().array(), 0, length);
 
-	}
+    }
 
 }
