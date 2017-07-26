@@ -1,10 +1,12 @@
 language: java
 
 jdk:
-    - oraclejdk8
     - oraclejdk7
     - openjdk7
-    - openjdk6
+
+env:
+    global:
+        gpg.skip=true
 
 notifications:
     email:
