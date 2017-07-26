@@ -118,11 +118,10 @@
             </properties>
         </profile>
         <profile>
-            <id>travis</id>
+            <id>gpg</id>
             <activation>
                 <property>
-                    <name>TRAVIS</name>
-                    <value>true</value>
+                    <name>!gpg.passphrase</name>
                 </property>
             </activation>
             <properties>
