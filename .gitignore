@@ -1,7 +1,22 @@
-/target
-/.classpath
-/.project
-/.settings
-/pom.xml.releaseBackup
-/release.properties
+# OS
+.DS_Store
+Thumbs.db
 
+# IDE (Eclipse)
+.classpath
+.project
+.settings
+build
+
+# IDE (Intellij IDEA)
+*.iml
+.idea
+out
+
+# Maven
+target
+pom.xml.releaseBackup
+release.properties
+
+# Runtime
+logs
