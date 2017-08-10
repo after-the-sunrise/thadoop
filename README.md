@@ -1,4 +1,4 @@
-# Thadoop [![Build Status](https://travis-ci.org/after-the-sunrise/thadoop.svg?branch=master)](https://travis-ci.org/after-the-sunrise/thadoop)
+# Thadoop [![Build Status][travis-icon]][travis-page] [![Coverage Status][coverall-icon]][coverall-page]
 Thadoop (= Thrift + Hadoop) is a simple set of wrapper templates to integrate [Apache Thrift](https://thrift.apache.org/) implementation with Hadoop's Writable interface. 
 
 The goal of this module is to provide a quick and easy way to use auto-generate thrift codes as a Input/Output for the Hadoop related tasks.
@@ -31,35 +31,35 @@ In the maven project file, add maven repository and dependency to retrieve the t
 This is the very base of all the other integrations. Implement a subclass of the custom `TWritable` first. (Swap `ThadoopSample` class in the sample below.)
 
 ```java:SampleWritable.java
-	public class SampleWritable extends TWritable<ThadoopSample> {
-		
-		private final ThadoopSample base = new ThadoopSample();
-		
-		@Override
-		public ThadoopSample get() {
-			return base; // Note : Do NOT create new instance here !!!
-		}
-		
+public class SampleWritable extends TWritable<ThadoopSample> {
+
+	private final ThadoopSample base = new ThadoopSample();
+
+	@Override
+	public ThadoopSample get() {
+		return base; // Note : Do NOT create new instance here !!!
 	}
+
+}
 ```
 
 This subclass can be fed to Mapper/Reducer directly, as the superclass implements the Hadoop's writable interface.
 
 ```java:SampleJob.java
-	public class SampleJob extends Configured implements Tool {
+public class SampleJob extends Configured implements Tool {
 
-		@Override
-		public int run(String[] args) throws Exception {
-			
-			Job job = ...
-			
-			job.setOutputValueClass(SampleWritable.class);
-			
-			...
-			
-		}
-		
+	@Override
+	public int run(String[] args) throws Exception {
+
+		Job job = ...
+
+		job.setOutputValueClass(SampleWritable.class);
+
+		...
+
 	}
+
+}
 ```
 
 
@@ -71,13 +71,13 @@ Create a subclass of `TStorage`. This superclass implements the Pig's load funct
 Subclass implementation should look like something below:
 
 ```java:SampleStorage.java
-	public class SampleStorage extends TStorage<ThadoopSample._Fields, SampleWritable> {
-		
-		public SampleStorage() {
-			super(SampleWritable.class, ThadoopSample.metaDataMap);
-		}
-		
+public class SampleStorage extends TStorage<ThadoopSample._Fields, SampleWritable> {
+
+	public SampleStorage() {
+		super(SampleWritable.class, ThadoopSample.metaDataMap);
 	}
+
+}
 ```
 
 
@@ -85,11 +85,16 @@ Subclass implementation should look like something below:
 Create a subclass of `TSerDe`. This superclass implements the Hive's SerDe interface.
 
 ```java:SampleSerDe.java
-	public class SampleSerDe extends TSerDe {
+public class SampleSerDe extends TSerDe {
 
-		public SampleSerDe() {
-			super(SampleWritable.class);
-		}
-
+	public SampleSerDe() {
+		super(SampleWritable.class);
 	}
+
+}
 ```
+
+[travis-page]:https://travis-ci.org/after-the-sunrise/thadoop
+[travis-icon]:https://travis-ci.org/after-the-sunrise/thadoop.svg?branch=master
+[coverall-page]:https://coveralls.io/github/after-the-sunrise/thadoop?branch=master
+[coverall-icon]:https://coveralls.io/repos/github/after-the-sunrise/thadoop/badge.svg?branch=master

@@ -79,6 +79,7 @@
         <build.plugin.report.version>2.7</build.plugin.report.version>
         <build.plugin.surefire.version>2.17</build.plugin.surefire.version>
         <build.plugin.coberture.version>2.6</build.plugin.coberture.version>
+        <build.plugin.coveralls.version>4.3.0</build.plugin.coveralls.version>
         <build.plugin.findbugs.version>3.0.0</build.plugin.findbugs.version>
         <build.plugin.checkstyle.version>2.13</build.plugin.checkstyle.version>
         <build.plugin.javadoc.version>2.9.1</build.plugin.javadoc.version>
@@ -249,6 +250,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>${build.plugin.coberture.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>${build.plugin.coveralls.version}</version>
             </plugin>
         </plugins>
         <pluginManagement>
