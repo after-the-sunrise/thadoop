@@ -1,4 +1,6 @@
-# Thadoop [![Build Status][travis-icon]][travis-page] [![Coverage Status][coverall-icon]][coverall-page]
+# Thadoop
+[![Build Status][travis-icon]][travis-page] [![Coverage Status][coverall-icon]][coverall-page] ![Maven Central][maven-badge]
+
 Thadoop (= Thrift + Hadoop) is a simple set of wrapper templates to integrate [Apache Thrift](https://thrift.apache.org/) implementation with Hadoop's Writable interface. 
 
 The goal of this module is to provide a quick and easy way to use auto-generate thrift codes as a Input/Output for the Hadoop related tasks.
@@ -98,3 +100,4 @@ public class SampleSerDe extends TSerDe {
 [travis-icon]:https://travis-ci.org/after-the-sunrise/thadoop.svg?branch=master
 [coverall-page]:https://coveralls.io/github/after-the-sunrise/thadoop?branch=master
 [coverall-icon]:https://coveralls.io/repos/github/after-the-sunrise/thadoop/badge.svg?branch=master
+[maven-badge]:https://maven-badges.herokuapp.com/maven-central/com.after_sunrise.oss/thadoop/badge.svg
